@@ -1,5 +1,6 @@
 package com.androidbook.crimicalintent;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,11 @@ public class CrimeListFragment extends Fragment {
     private RecyclerView mCrimeRecyclerView;
     private CrimeAdapter mAdapter;
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateUI();
+    }
 
     private class CrimeHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView mTitleTextView;
@@ -29,10 +35,15 @@ public class CrimeListFragment extends Fragment {
         private Crime mCrime;
         private ImageView imageView;
 
+
+
         @Override
         public void onClick(View v) {
             String make = mCrime.getmTitle() + "  status " + mCrime.ismSolved();
             Toast.makeText(getActivity(), make, Toast.LENGTH_LONG).show();
+
+            Intent intent = CrimeActivity.newIntent(getActivity(),mCrime.getmId());
+            startActivity(intent);
         }
 
 
@@ -104,7 +115,13 @@ public class CrimeListFragment extends Fragment {
     private void updateUI() {
         CrimeLab crimeLab = CrimeLab.get(getActivity());
         List<Crime> crimes = crimeLab.getCrimes();
-        mAdapter = new CrimeAdapter(crimes);
-        mCrimeRecyclerView.setAdapter(mAdapter);
+
+
+        if(mAdapter==null) {
+            mAdapter = new CrimeAdapter(crimes);
+            mCrimeRecyclerView.setAdapter(mAdapter);
+        }
+        else
+            mAdapter.notifyDataSetChanged();
     }
 }
