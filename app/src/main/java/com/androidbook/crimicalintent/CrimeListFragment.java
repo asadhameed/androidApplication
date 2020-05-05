@@ -41,7 +41,8 @@ public class CrimeListFragment extends Fragment {
             String make = mCrime.getmTitle() + "  status " + mCrime.ismSolved();
             Toast.makeText(getActivity(), make, Toast.LENGTH_LONG).show();
             itemPosition = getAdapterPosition();
-            Intent intent = CrimeActivity.newIntent(getActivity(), mCrime.getmId());
+           // Intent intent = CrimeActivity.newIntent(getActivity(), mCrime.getmId());
+            Intent intent = CrimePagerActivity.newIntent(getActivity(), mCrime.getmId());
             startActivity(intent);
         }
 

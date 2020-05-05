@@ -16,6 +16,7 @@ import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import java.util.UUID;
 
@@ -65,7 +66,15 @@ public class CrimeFragment extends Fragment {
 
         btnDate= v.findViewById(R.id.crime_date);
         btnDate.setText(mCrime.getmDate().toString());
-        btnDate.setEnabled(false);
+        //btnDate.setEnabled(false);
+        btnDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+              //  FragmentManager fragmentManager= getFragmentManager();
+                DatePackerFragment dialog= new DatePackerFragment();
+                dialog.show(getFragmentManager(),"DialogDate");
+            }
+        });
         mTitleField.setText(mCrime.getmTitle());
 
         cBoxSolved=v.findViewById(R.id.crime_solved);
