@@ -21,7 +21,9 @@ public class CrimeLab {
     public List<Crime> getCrimes(){
         return mCrime;
     }
-
+    public void addCrime(Crime crime){
+        mCrime.add(crime);
+    }
     public Crime getCrime(UUID id){
         for (Crime cr: mCrime){
             if(cr.getmId().equals(id))
@@ -33,13 +35,5 @@ public class CrimeLab {
 
     private CrimeLab(Context context){
         mCrime= new ArrayList<>();
-
-        for(int i=0; i<100;i++){
-            Crime crime = new Crime();
-            crime.setmTitle("Crime #"+i);
-            crime.setmSolved(i%2==0);
-            crime.setmRequiresPolice((i%3==0)||(i%5==0));
-            mCrime.add(crime);
-        }
     }
 }
