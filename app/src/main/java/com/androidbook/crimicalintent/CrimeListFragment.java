@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -135,9 +136,20 @@ public class CrimeListFragment extends Fragment {
                 Intent intent = CrimePagerActivity.newIntent(getActivity(),crime.getmId());
                 startActivity(intent);
                 return true;
+            case R.id.show_subtitle:
+                updateSubtitle();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public void updateSubtitle(){
+        CrimeLab crimeLab= CrimeLab.get(getActivity());
+        int crimeCount=crimeLab.getCrimes().size();
+        String subtitle=getString(R.string.subtitle_formate,crimeCount);
+        AppCompatActivity appCompatActivity=(AppCompatActivity) getActivity();
+        appCompatActivity.getSupportActionBar().setSubtitle(subtitle);
     }
 
     private void updateUI(int position) {
