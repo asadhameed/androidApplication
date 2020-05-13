@@ -27,6 +27,7 @@ public class CrimeListFragment extends Fragment {
     private CrimeAdapter mAdapter;
     private boolean mSubtitleVisible;
     private int itemPosition;
+    public static final String SAVE_SUBTITLE="subttile_show_and_hide";
 
     @Override
     public void onResume() {
@@ -34,6 +35,12 @@ public class CrimeListFragment extends Fragment {
         //updateUI(itemPosition);
         updateUI();
 
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle bundle){
+        super.onSaveInstanceState(bundle);
+        bundle.putBoolean(SAVE_SUBTITLE,mSubtitleVisible);
     }
 
     private class CrimeHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -114,6 +121,8 @@ public class CrimeListFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_crime_list, container, false);
         mCrimeRecyclerView = v.findViewById(R.id.crime_recycler_view);
         mCrimeRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        if(savedInstanceState != null)
+            mSubtitleVisible= savedInstanceState.getBoolean(SAVE_SUBTITLE);
         updateUI();
         return v;
     }
