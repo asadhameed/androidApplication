@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,12 +25,22 @@ import java.util.List;
 public class CrimeListFragment extends Fragment {
     private RecyclerView mCrimeRecyclerView;
     private CrimeAdapter mAdapter;
+    private boolean mSubtitleVisible;
     private int itemPosition;
+    public static final String SAVE_SUBTITLE="subttile_show_and_hide";
 
     @Override
     public void onResume() {
         super.onResume();
-        updateUI(itemPosition);
+        //updateUI(itemPosition);
+        updateUI();
+
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle bundle){
+        super.onSaveInstanceState(bundle);
+        bundle.putBoolean(SAVE_SUBTITLE,mSubtitleVisible);
     }
 
     private class CrimeHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -109,6 +121,8 @@ public class CrimeListFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_crime_list, container, false);
         mCrimeRecyclerView = v.findViewById(R.id.crime_recycler_view);
         mCrimeRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        if(savedInstanceState != null)
+            mSubtitleVisible= savedInstanceState.getBoolean(SAVE_SUBTITLE);
         updateUI();
         return v;
     }
@@ -123,6 +137,44 @@ public class CrimeListFragment extends Fragment {
     public  void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.fragment_crime_list,menu);
+
+        MenuItem subtitleItem=menu.findItem(R.id.show_subtitle);
+        if(mSubtitleVisible) {
+            subtitleItem.setTitle(R.string.hide_subtitle);
+        }
+        else{
+            subtitleItem.setTitle(R.string.show_subtitle);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch (item.getItemId()){
+            case R.id.new_crime:
+                Crime crime = new Crime();
+                CrimeLab.get(getActivity()).addCrime(crime);
+                Intent intent = CrimePagerActivity.newIntent(getActivity(),crime.getmId());
+                startActivity(intent);
+                return true;
+            case R.id.show_subtitle:
+                mSubtitleVisible =!mSubtitleVisible;
+                getActivity().invalidateOptionsMenu();
+                updateSubtitle();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public void updateSubtitle(){
+        CrimeLab crimeLab= CrimeLab.get(getActivity());
+        int crimeCount=crimeLab.getCrimes().size();
+        String subtitle=getString(R.string.subtitle_formate,crimeCount);
+        if(!mSubtitleVisible){
+            subtitle=null;
+        }
+        AppCompatActivity appCompatActivity=(AppCompatActivity) getActivity();
+        appCompatActivity.getSupportActionBar().setSubtitle(subtitle);
     }
 
     private void updateUI(int position) {
@@ -132,7 +184,13 @@ public class CrimeListFragment extends Fragment {
     private void updateUI() {
         CrimeLab crimeLab = CrimeLab.get(getActivity());
         List<Crime> crimes = crimeLab.getCrimes();
-        mAdapter = new CrimeAdapter(crimes);
-        mCrimeRecyclerView.setAdapter(mAdapter);
+        if(mAdapter==null) {
+            mAdapter = new CrimeAdapter(crimes);
+            mCrimeRecyclerView.setAdapter(mAdapter);
+        }
+        else{
+            mAdapter.notifyDataSetChanged();
+        }
+        updateSubtitle();
     }
 }
