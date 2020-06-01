@@ -3,7 +3,10 @@ package com.androidbook.crimicalintent;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -30,8 +33,10 @@ public class CrimeFragment extends Fragment {
     private Button btnDate;
     private CheckBox cBoxSolved;
     private Button btnCrimeReport;
+    private Button btnSuspect;
     private static final String ARG_CRIME_ID="crime_id";
     private static final int REQUEST_CODE=0;
+    private static final int REQUEST_CONTACT=1;
 
     public  static  CrimeFragment newInstance(UUID crimeid){
         Bundle args = new Bundle();
@@ -102,6 +107,17 @@ public class CrimeFragment extends Fragment {
                 startActivity(i);
             }
         });
+        final Intent pickContact= new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+        btnSuspect = v.findViewById(R.id.crime_suspect);
+        btnSuspect.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                startActivityForResult(pickContact,REQUEST_CONTACT);
+
+            }
+        });
+        if(mCrime.getmSuspect()!=null)
+            btnSuspect.setText(mCrime.getmSuspect());
 
         return v;
     }
@@ -115,7 +131,23 @@ public class CrimeFragment extends Fragment {
             Date newCrimeDate=(Date) data.getSerializableExtra(DatePackerFragment.ARG_DATE);
             mCrime.setmDate(newCrimeDate);
             btnDate.setText(mCrime.getmDate().toString());
+        }
+        if(requestCode==REQUEST_CONTACT && data!=null){
+            Uri contactUri=data.getData();
+            String[] queryFields= new String []{ContactsContract.Contacts.DISPLAY_NAME};
+            Cursor cursor=getActivity().getContentResolver().query(contactUri, queryFields, null,null,null);
 
+            try {
+                if(cursor.getCount()==0){
+                    return;
+                }
+                cursor.moveToFirst();
+                String supect= cursor.getString(0);
+                mCrime.setmSuspect(supect);
+                btnSuspect.setText(supect);
+            }finally {
+                cursor.close();
+            }
         }
     }
 
