@@ -3,7 +3,6 @@ package com.androidbook.crimicalintent;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.BadParcelableException;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -18,9 +17,10 @@ import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.UUID;
 
 
@@ -29,6 +29,7 @@ public class CrimeFragment extends Fragment {
     private EditText mTitleField;
     private Button btnDate;
     private CheckBox cBoxSolved;
+    private Button btnCrimeReport;
     private static final String ARG_CRIME_ID="crime_id";
     private static final int REQUEST_CODE=0;
 
@@ -87,6 +88,21 @@ public class CrimeFragment extends Fragment {
                 mCrime.setmSolved(isChecked);
             }
         });
+
+        btnCrimeReport=v.findViewById(R.id.crime_report);
+        btnCrimeReport.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                Intent i = new Intent(Intent.ACTION_SEND);
+                i.setType("text/plain");
+                i.putExtra(Intent.EXTRA_TEXT,getCrime());
+                i.putExtra(Intent.EXTRA_SUBJECT,"CrimeInalIntent crime report");
+                //Always ask from user to call the default option
+                i= Intent.createChooser(i,getString(R.string.send_report));
+                startActivity(i);
+            }
+        });
+
         return v;
     }
 
@@ -107,5 +123,28 @@ public class CrimeFragment extends Fragment {
     public  void onPause(){
         super.onPause();
         CrimeLab.get(getActivity()).updateCrime(mCrime);
+    }
+
+    private String getCrime(){
+        String solvedString = null;
+        if(mCrime.ismSolved()){
+            solvedString="Report is solved";
+        }
+        else
+            solvedString ="Report is not solved yet";
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US);
+        String dateString= sdf.format(mCrime.getmDate());
+
+        String supect=mCrime.getmSuspect();
+        if(supect == null){
+            supect="there is no suspect.";
+        }
+        else {
+            supect= "the suspect is" + supect;
+        }
+
+        String report =getString(R.string.crime_report,mCrime.getmTitle(),dateString,solvedString,supect);
+        return report;
     }
 }

@@ -12,4 +12,7 @@
     <string name="show_subtitle" >Show subtitle</string>
     <string name="hide_subtitle">Hide subtitle</string>
     <string name="subtitle_formate">%1$d crimes</string>
+
+    <string name="crime_report">%1$s! The crime discovered on %2$s. %3$s , %4$s</string>
+    <string name="send_report" >Send crime report via</string>
 </resources>

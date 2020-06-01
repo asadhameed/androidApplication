@@ -10,7 +10,7 @@ import com.androidbook.crimicalintent.CrimeDbSchema.CrimeTable;
 
 public class CrimeBaseHelper extends SQLiteOpenHelper {
     private static final int VERSION=1;
-    public static final String DATABASE_NAME="crimeBase.db";
+    public static final String DATABASE_NAME="crimeBase1.db";
     public CrimeBaseHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, VERSION);
     }
@@ -21,6 +21,7 @@ public class CrimeBaseHelper extends SQLiteOpenHelper {
                 CrimeTable.Cols.UUID + " , "+
                 CrimeTable.Cols.TITLE + " , "+
                 CrimeTable.Cols.DATE  + " , "+
+                CrimeTable.Cols.SUSPECT +" ,"+
                 CrimeTable.Cols.SOLVED + " ) ") ;
     }
 

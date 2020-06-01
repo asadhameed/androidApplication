@@ -29,6 +29,24 @@
         android:layout_height="wrap_content"
         android:id="@+id/crime_solved"
         android:text="@string/crime_solved_label" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:orientation="vertical" >
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Choose Suspect"
+            android:id="@+id/crime_suspect"></Button>
+
+        <Button
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Send Crime Report"
+            android:id="@+id/crime_report"></Button>
+    </LinearLayout>
 
 
 </LinearLayout>

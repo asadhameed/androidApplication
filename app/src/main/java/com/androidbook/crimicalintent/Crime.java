@@ -9,6 +9,15 @@ public class Crime {
     private Date mDate;
     private  boolean mSolved;
     private boolean mRequiresPolice;
+    private String mSuspect;
+
+    public String getmSuspect() {
+        return mSuspect;
+    }
+
+    public void setmSuspect(String mSuspect) {
+        this.mSuspect = mSuspect;
+    }
 
     public boolean ismRequiresPolice() {
         return mRequiresPolice;
