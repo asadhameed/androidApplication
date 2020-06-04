@@ -3,12 +3,11 @@ package com.androidbook.crimicalintent;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.CursorWrapper;
 import android.database.sqlite.SQLiteDatabase;
-import android.widget.ListView;
 
 import com.androidbook.crimicalintent.CrimeDbSchema.CrimeTable;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -45,6 +44,10 @@ public class CrimeLab {
         ContentValues values=getContentValues(crime);
         mDatabase.insert(CrimeTable.NAME,null,values);
         //mCrime.add(crime);
+    }
+    public File getPhotoFile(Crime crime){
+        File filesDir= mContext.getFilesDir();
+        return new File(filesDir, crime.getPhotoFileName());
     }
 
     public void updateCrime(Crime crime){
